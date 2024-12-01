@@ -1,11 +1,12 @@
-import { Body, Controller, Get, Param, Delete, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Delete, Post, Put, Session } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { AuthService } from '../auth/auth.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private usersService: UsersService){}
+  constructor(private usersService: UsersService, private authService: AuthService){}
 
   @Get()
   findAll(){

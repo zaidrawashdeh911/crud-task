@@ -1,33 +1,46 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(){
-    return this.prisma.prismaClient.user.findMany();
+  async create(data: any){
+    const exists = await this.prisma.user.findUnique({
+      where: {
+        email:data.email
+      }
+    })
+    if (exists) throw new ConflictException('email exists');
+    
+    return this.prisma.user.create({data});
   }
 
-  async findOne(id: number){
-    return this.prisma.prismaClient.user.findUnique({
+  findAll(){
+    return this.prisma.user.findMany();
+  }
+
+  findOne(id: number){
+    return this.prisma.user.findUnique({
       where:{id}
     });
   }
 
-  async create(data: any){
-    return this.prisma.prismaClient.user.create({data});
+  find(email: string){
+    return this.prisma.user.findFirst({
+      where:{email}
+    });
   }
 
   async update(id: number, data: any){
-    return this.prisma.prismaClient.user.update({
+    return this.prisma.user.update({
       where: {id},
       data
     });
   }
 
   async remove(id:number){
-    return this.prisma.prismaClient.user.delete({
+    return this.prisma.user.delete({
       where: {id}
     });
   }

@@ -14,8 +14,10 @@ generator client {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
+  id       Int     @id @default(autoincrement())
   username String
-  email    String
+  email    String  @unique
   password String
+  role     Boolean @default(false)
+  hashedRt String?
 }
