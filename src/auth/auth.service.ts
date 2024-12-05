@@ -104,18 +104,24 @@ export class AuthService{
     return tokens;
   }
 
-  async logout(userId: number){
-    await this.prisma.user.updateMany({
+  async signout(userId: number):Promise<void>{
+    const user = await this.prisma.user.findUnique({
       where:{
         id: userId,
         hashedRt:{
           not:null
         },
-      },
-      data:{
-        hashedRt: null
       }
     })
+    
+    if(!user) throw new ForbiddenException('User not found');
+
+    await this.prisma.user.update({
+      where:{id:userId},
+      data:{ hashedRt:null}
+    })
+    
+    console.log(`User with ID ${userId} has been logged out`);
   }
 
   async refreshTokens(userId: number, rt: string){

@@ -5,7 +5,6 @@ import { Tokens } from './types';
 import { RtGuard } from '../common/guards/rt.guard';
 import { GetCurrentUser, GetCurrentUserId, Public } from '../common/decorators/index';
 import { RoleGuard } from 'src/common/guards';
-
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService){}
@@ -26,8 +25,10 @@ export class AuthController {
   
   @Post('signout')
   @HttpCode(HttpStatus.OK)
-  signout(@GetCurrentUserId() userId: number){
-    return this.authService.logout(userId);
+  async signout(@Req() request):Promise<void>{
+    const userId =  request.user.sub;
+    await this.authService.signout(userId);
+    return;
   }
 
   @Public()

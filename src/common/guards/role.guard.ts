@@ -23,10 +23,10 @@ export class RoleGuard implements CanActivate{
     if (isPublic) return true;
 
     try {
-    const request = context.switchToHttp().getRequest();
+      const request = context.switchToHttp().getRequest();
 
-    const token = request.headers['authorization']?.split(' ')[1];
-    if (!token) throw new UnauthorizedException('No token');
+      const token = request.headers['authorization']?.split(' ')[1];
+      if (!token) throw new UnauthorizedException('No token');
 
       const decoded = this.jwtService.verify(token, { secret: 'at-secret' });
       //console.log('Decoded Token:', decoded);
